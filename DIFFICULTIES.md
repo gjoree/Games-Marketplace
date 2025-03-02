@@ -1,0 +1,1 @@
+In this file, I will monitor and mark down the difficulties I overcame when building this project.
