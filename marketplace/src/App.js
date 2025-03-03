@@ -5,21 +5,63 @@ import Marketplace from './components/Marketplace';
 import Games from './components/Games';
 import { FaHome, FaCoins, FaSignInAlt } from 'react-icons/fa';
 import { GiAk47U } from "react-icons/gi";
+import { CiLogout } from "react-icons/ci";
+import axios from 'axios';
 
 import './App.css';
 
 const App = () => {
   const [isLoginOpen, setLoginOpen] = useState(false);
   const [isSignUp, setSignUp] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [error, setError] = useState('');
 
   const toggleLogin = () => {
     setLoginOpen(!isLoginOpen);
     setSignUp(false); // Reset to Login form when pop-up is opened
+    setError(''); // Clear any previous errors
   };
 
   const toggleSignUp = () => {
     setSignUp(!isSignUp);
+    setError(''); // Clear any previous errors
   };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      if (response.data.token) {
+        localStorage.setItem('user', JSON.stringify(response.data)); // Save user data in localStorage
+        toggleLogin(); // Close the pop-up
+        window.location.reload(); // Refresh the page to update the UI
+      }
+    } catch (err) {
+      setError('Invalid credentials. Please try again.');
+    }
+  };
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/signup', { username, email, password });
+      if (response.data) {
+        alert('Sign-up successful! Please log in.');
+        toggleSignUp(); // Switch back to the Login form
+      }
+    } catch (err) {
+      setError('Sign-up failed. Please try again.');
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user'); // Remove user data from localStorage
+    window.location.reload(); // Refresh the page to update the UI
+  };
+
+  const user = JSON.parse(localStorage.getItem('user'));
 
   return (
     <Router>
@@ -46,23 +88,50 @@ const App = () => {
                 </Link>
               </li>
               <li>
-                <Link to="#" className="navbar-link" onClick={toggleLogin}>
-                <FaSignInAlt /> Login
-                </Link>
+            {user ? (
+              <Link to="#" className="navbar-link" onClick={handleLogout}>
+               <CiLogout /> Logout
+              </Link>
+            ) : (
+              <Link to="#" className="navbar-link" onClick={toggleLogin}>
+               <FaSignInAlt /> Login
+              </Link>
+            )}
               </li>
             </ul>
           </div>
         </nav>
 
       {/* Login/Sign Up Pop-up */}
-        {isLoginOpen && (
+      {isLoginOpen && (
           <div className="login-popup">
             <div className="login-content">
               <h2>{isSignUp ? 'Create an Account' : 'Welcome Back!'}</h2>
-              <form>
-                {isSignUp && <input type="text" placeholder="Full Name" required />}
-                <input type="email" placeholder="Email" required />
-                <input type="password" placeholder="Password" required />
+              <form onSubmit={isSignUp ? handleSignUp : handleLogin}>
+                {isSignUp && (
+                  <input
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                  />
+                )}
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                {error && <p className="error-message">{error}</p>}
                 <button type="submit">{isSignUp ? 'Sign Up' : 'Login'}</button>
               </form>
               <p>
