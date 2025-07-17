@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const authRoutes = require('./routes/auth')
+const sokobanRoutes = require('./routes/sokoban')
 const path = require('path')
 
 const app = express()
@@ -12,7 +13,18 @@ app.use(bodyParser.json())
 
 // Routes
 app.use('/api/auth', authRoutes)
+app.use('/api/sokoban', sokobanRoutes)
 app.use('/sokoban', express.static(path.join(__dirname, 'sokoban')))
+app.get('/racer', (req, res) => {
+  res.sendFile(path.join(__dirname, 'javascript-racer', 'v4.final.html'))
+})
+
+// Serve static assets like JS/CSS/images from the racer folder
+app.use('/racer', express.static(path.join(__dirname, 'javascript-racer')))
+app.use(
+  '/onslaught-arena',
+  express.static(path.join(__dirname, 'onslaught_arena/htdocs')),
+)
 
 // Start server
 const PORT = 5059

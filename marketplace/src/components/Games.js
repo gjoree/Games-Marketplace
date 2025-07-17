@@ -1,25 +1,76 @@
 import React from 'react'
 
 const Games = () => {
+  const user = JSON.parse(localStorage.getItem('user'))
+  const games = [
+    {
+      id: 'sokoban',
+      title: 'Sokoban',
+      thumbnail:
+        'https://play-lh.googleusercontent.com/IVTpt37tHBQ5u7SOzD4y7OCipsq2xRkDv1h-qYKO_Mab_MLFsPFOXpuVJpjfATyMDRQ=w526-h296-rw',
+      url: 'http://localhost:5059/sokoban',
+    },
+    {
+      id: 'racer',
+      title: 'Racer Game',
+      thumbnail: 'https://img.youtube.com/vi/Y92aG3YagXU/hqdefault.jpg',
+      url: 'http://localhost:5059/racer',
+    },
+    {
+      id: 'onslaught',
+      title: 'Onslaught Arena',
+      thumbnail: 'https://www.typinggames.zone/web/game-thumbnails/arena2.png',
+      url: 'http://localhost:5059/onslaught-arena',
+    },
+  ]
+
+  const handleThumbnailClick = (url) => {
+    // Redirect in the current tab:
+    window.location.href = url
+
+    // If you want to open in a **new tab** instead:
+    // window.open(url, '_blank');
+  }
+
   return (
     <div className='page-content'>
-      <h1>Games</h1>
-      <p>Play our exciting game below:</p>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: '2rem',
-          width: '140%',
-          marginLeft: '-20%',
-        }}
-      >
-        <iframe
-          src='http://localhost:5059/sokoban'
-          title='Sokoban Game'
-        ></iframe>
-      </div>
+      {user ? (
+        <>
+          <h1>Games</h1>
+          <p>Click on a game to play:</p>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '2rem',
+              marginTop: '2rem',
+            }}
+          >
+            {games.map((game) => (
+              <div
+                key={game.id}
+                style={{ textAlign: 'center', cursor: 'pointer' }}
+                onClick={() => handleThumbnailClick(game.url)}
+              >
+                <img
+                  src={game.thumbnail}
+                  alt={game.title}
+                  style={{ width: '300px', height: '200px' }}
+                />
+                <p>{game.title}</p>
+              </div>
+            ))}
+          </div>
+        </>
+      ) : (
+        <>
+          <h1>Games</h1>
+          <p>
+            Discover the amazing games we have to offer by logging in or signing
+            up.
+          </p>
+        </>
+      )}
     </div>
   )
 }
