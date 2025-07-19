@@ -1,7 +1,7 @@
-import React from 'react'
+import useAuthUser from '../hooks/useAuthUser'
 
 const Games = () => {
-  const user = JSON.parse(localStorage.getItem('user'))
+  const { user } = useAuthUser()
   const games = [
     {
       id: 'sokoban',

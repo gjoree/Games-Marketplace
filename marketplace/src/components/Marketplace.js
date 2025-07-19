@@ -1,7 +1,7 @@
-import React from 'react'
+import useAuthUser from '../hooks/useAuthUser'
 
 const Marketplace = () => {
-  const user = JSON.parse(localStorage.getItem('user'))
+  const { user } = useAuthUser()
   return (
     <div className='page-content'>
       {user ? (

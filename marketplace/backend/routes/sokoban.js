@@ -3,12 +3,20 @@ const router = express.Router()
 const db = require('../db') // Your mysql2 connection
 
 // Get current user's max level
-router.get('/progress/:userId', async (req, res) => {
-  const { userId } = req.params
+router.get('/progress', async (req, res) => {
+  console.log('Cookies:', req.cookies)
+  const userId = req.cookies.userId
+
+  if (!userId) {
+    return res.status(401).json({ error: 'Unauthorized' })
+  }
+
   try {
-    const [rows] = await db
-      .promise()
-      .query('SELECT maxLevel_Sokoban FROM Users WHERE user_id = ?', [userId])
+    const [rows] = await db.query(
+      'SELECT maxLevel_Sokoban FROM Users WHERE user_id = ?',
+      [userId],
+    )
+
     if (rows.length > 0) {
       res.json({ level: rows[0].maxLevel_Sokoban })
     } else {
@@ -22,7 +30,9 @@ router.get('/progress/:userId', async (req, res) => {
 
 // Update level and coins when level is completed
 router.post('/complete-level', async (req, res) => {
-  const { userId, level } = req.body
+  const userId = req.cookies.userId // Securely get the user from cookie
+  const { level } = req.body
+  console.log('User ID:', userId, 'Level:', level)
 
   if (!userId || typeof level !== 'number') {
     return res.status(400).json({ error: 'Invalid input' })
@@ -34,11 +44,11 @@ router.post('/complete-level', async (req, res) => {
       [userId],
     )
 
-    if (rows.length === 0)
+    if (rows.length === 0) {
       return res.status(404).json({ error: 'User not found' })
+    }
 
     const { maxLevel_Sokoban, Coins } = rows[0]
-
     const newCoins = Coins + 10
 
     // Only update if it's a new level
