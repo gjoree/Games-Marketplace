@@ -1,4 +1,7 @@
-IMPORTANT DISCLAIMER: Make sure to be inside of /marketplace when doing changes, wanting to make improvements and fixes and running the project. Be in GAMES-MARKETPLACE only for commits and pushes.
+IMPORTANT DISCLAIMER: Make sure to be inside of /marketplace to start the project, when doing changes and wanting to make improvements and fixes.
+
+First of all, You need to port forward the database port in order to start it locally, so the database can work before you start the back-end, you can do so by:
+`ssh -L 3306:localhost:3306 student_number@www.studenti.famnit.upr.si`
 
 Steps to start the project:
 
@@ -11,7 +14,4 @@ Steps to start the project:
 - cd back to marketplace using `cd ../`
 - Start the front-end by using `npm start`
 
-You need to port forward the database port in order to start it locally, so the database can work before you start the back-end, you can do so by:
-`ssh -L 3306:localhost:3306 student_number@www.studenti.famnit.upr.si`
-
-If you make changes to the sokoban files, make sure to run `npx webpack` while in the sokoban folder, so the new scripts can be executed. Delete the old ones and the new dist file.
+If you make changes to the sokoban files in the backend, make sure to run `npx webpack` while in the sokoban folder, so the new scripts can be executed. Delete the old ones and the new dist file. Make sure to restart the back-end after doing changes.
