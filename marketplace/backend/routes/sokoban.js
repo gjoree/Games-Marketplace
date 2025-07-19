@@ -1,0 +1,59 @@
+const express = require('express')
+const router = express.Router()
+const db = require('../db') // Your mysql2 connection
+
+// Get current user's max level
+router.get('/progress/:userId', async (req, res) => {
+  const { userId } = req.params
+  try {
+    const [rows] = await db
+      .promise()
+      .query('SELECT maxLevel_Sokoban FROM Users WHERE user_id = ?', [userId])
+    if (rows.length > 0) {
+      res.json({ level: rows[0].maxLevel_Sokoban })
+    } else {
+      res.status(404).json({ error: 'User not found' })
+    }
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Database error' })
+  }
+})
+
+// Update level and coins when level is completed
+router.post('/complete-level', async (req, res) => {
+  const { userId, level } = req.body
+
+  if (!userId || typeof level !== 'number') {
+    return res.status(400).json({ error: 'Invalid input' })
+  }
+
+  try {
+    const [rows] = await db.query(
+      'SELECT maxLevel_Sokoban, Coins FROM Users WHERE user_id = ?',
+      [userId],
+    )
+
+    if (rows.length === 0)
+      return res.status(404).json({ error: 'User not found' })
+
+    const { maxLevel_Sokoban, Coins } = rows[0]
+
+    const newCoins = Coins + 10
+
+    // Only update if it's a new level
+    if (level > maxLevel_Sokoban) {
+      await db.query(
+        'UPDATE Users SET maxLevel_Sokoban = ?, Coins = ? WHERE user_id = ?',
+        [level, newCoins, userId],
+      )
+    }
+
+    res.json({ success: true, newLevel: level, newCoins })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to update user data' })
+  }
+})
+
+module.exports = router
