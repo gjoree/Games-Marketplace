@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 const authRoutes = require('./routes/auth')
 const sokobanRoutes = require('./routes/sokoban')
 const path = require('path')
@@ -8,8 +9,14 @@ const path = require('path')
 const app = express()
 
 // Middleware
-app.use(cors())
+app.use(
+  cors({
+    origin: 'http://localhost:3300', // 👈 your frontend's origin
+    credentials: true,
+  }),
+)
 app.use(bodyParser.json())
+app.use(cookieParser())
 
 // Routes
 app.use('/api/auth', authRoutes)

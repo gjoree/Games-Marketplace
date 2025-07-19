@@ -7,6 +7,7 @@ import { FaHome, FaCoins, FaSignInAlt } from 'react-icons/fa'
 import { GiAk47U } from 'react-icons/gi'
 import { CiLogout } from 'react-icons/ci'
 import axios from 'axios'
+import useAuthUser from './hooks/useAuthUser'
 
 import './App.css'
 
@@ -17,6 +18,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
   const [error, setError] = useState('')
+  const { user } = useAuthUser()
 
   const toggleLogin = () => {
     setLoginOpen(!isLoginOpen)
@@ -35,9 +37,10 @@ const App = () => {
       const response = await axios.post(
         `${process.env.REACT_APP_API}/api/auth/login`,
         { email, password },
+        { withCredentials: true }, // 👈 This allows sending/receiving cookies
       )
-      if (response.data.token) {
-        localStorage.setItem('user', JSON.stringify(response.data)) // Save user data in localStorage
+
+      if (response.data.message === 'Login successful') {
         toggleLogin() // Close the pop-up
         window.location.reload() // Refresh the page to update the UI
       }
@@ -62,12 +65,18 @@ const App = () => {
     }
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('user') // Remove user data from localStorage
-    window.location.reload() // Refresh the page to update the UI
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API}/api/auth/logout`,
+        {},
+        { withCredentials: true }, // 👈 required to send cookies
+      )
+      window.location.reload() // Refresh to update the UI
+    } catch (err) {
+      console.error('Logout failed:', err)
+    }
   }
-
-  const user = JSON.parse(localStorage.getItem('user'))
 
   return (
     <Router>
