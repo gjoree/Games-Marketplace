@@ -15,3 +15,5 @@ Steps to start the project:
 - Start the front-end by using `npm start`
 
 If you make changes to the sokoban files in the backend, make sure to run `npx webpack` while in the sokoban folder, so the new scripts can be executed. Delete the old ones and the new dist file. Make sure to restart the back-end after doing changes.
+
+TODO: See if there is a difference if the start of onslaught arena game arguments are pulled from the database or from local storage as it is now.

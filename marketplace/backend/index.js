@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const authRoutes = require('./routes/auth')
 const sokobanRoutes = require('./routes/sokoban')
+const onslaughtArenaRoutes = require('./routes/onslaught_arena')
 const path = require('path')
 
 const app = express()
@@ -11,7 +12,7 @@ const app = express()
 // Middleware
 app.use(
   cors({
-    origin: 'http://localhost:3300', // 👈 your frontend's origin
+    origin: 'http://localhost:3300', // frontend's origin
     credentials: true,
   }),
 )
@@ -21,6 +22,7 @@ app.use(cookieParser())
 // Routes
 app.use('/api/auth', authRoutes)
 app.use('/api/sokoban', sokobanRoutes)
+app.use('/api/onslaught', onslaughtArenaRoutes)
 app.use('/sokoban', express.static(path.join(__dirname, 'sokoban')))
 app.get('/racer', (req, res) => {
   res.sendFile(path.join(__dirname, 'javascript-racer', 'v4.final.html'))
