@@ -1,5 +1,5 @@
 ;(function define_horde_Engine() {
-  var VERSION = '{{VERSION}}'
+  var VERSION = '{{1.3.0}}'
   var SCREEN_WIDTH = 640
   var SCREEN_HEIGHT = 480
   var URL_STORE =
@@ -156,9 +156,24 @@
    * @return {void}
    */
   proto.run = function horde_Engine_proto_run() {
-    this.init()
-    this.lastUpdate = horde.now()
-    this.start()
+    // Fetch upgrades before starting the game
+    fetch('/api/onslaught/upgrades', { credentials: 'include' })
+      .then((res) => res.json())
+      .then((upgradeData) => {
+        horde.upgrades = upgradeData
+
+        // Once upgrades are loaded, start the game
+        this.init()
+        this.lastUpdate = horde.now()
+        this.start()
+      })
+      .catch((err) => {
+        console.error('Failed to load upgrades:', err)
+        horde.upgrades = {} // fallback
+        this.init()
+        this.lastUpdate = horde.now()
+        this.start()
+      })
   }
 
   /**

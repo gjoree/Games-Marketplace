@@ -1,4 +1,4 @@
-(function () {
-	var e = new horde.Engine();
-	e.run();
-}());
+;(function () {
+  var e = new horde.Engine()
+  e.run()
+})()

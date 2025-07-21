@@ -114,4 +114,135 @@ router.post('/clear-progress', async (req, res) => {
   }
 })
 
+router.get('/upgrades', async (req, res) => {
+  const userId = req.cookies.userId
+
+  if (!userId) {
+    return res.status(401).json({ error: 'Unauthorized' })
+  }
+
+  try {
+    var [rows] = await db.query(
+      `SELECT 
+        hero_health_level,
+        hero_speed_level,
+        sword_firingRate_level,
+        sword_speed_level,
+        sword_damage_level,
+        knife_firingRate_level,
+        knife_speed_level,
+        knife_damage_level,
+        spear_firingRate_level,
+        spear_speed_level,
+        spear_damage_level,
+        fireball_firingRate_level,
+        fireball_speed_level,
+        fireball_damage_level,
+        axe_firingRate_level,
+        axe_speed_level,
+        axe_damage_level,
+        fire_sword_firingRate_level,
+        fire_sword_speed_level,
+        fire_sword_damage_level,
+        fire_knife_firingRate_level,
+        fire_knife_speed_level,
+        fire_knife_damage_level,
+        firebomb_firingRate_level,
+        firebomb_speed_level,
+        firebomb_damage_level
+      FROM UserUpgrades
+      WHERE user_id = ?`,
+      [userId],
+    )
+
+    if (rows.length === 0) {
+      // Create new record with default values
+      await db.query(
+        `INSERT INTO UserUpgrades (
+        user_id,
+        hero_health_level,
+        hero_speed_level,
+        sword_firingRate_level,
+        sword_speed_level,
+        sword_damage_level,
+        knife_firingRate_level,
+        knife_speed_level,
+        knife_damage_level,
+        spear_firingRate_level,
+        spear_speed_level,
+        spear_damage_level,
+        fireball_firingRate_level,
+        fireball_speed_level,
+        fireball_damage_level,
+        axe_firingRate_level,
+        axe_speed_level,
+        axe_damage_level,
+        fire_sword_firingRate_level,
+        fire_sword_speed_level,
+        fire_sword_damage_level,
+        fire_knife_firingRate_level,
+        fire_knife_speed_level,
+        fire_knife_damage_level,
+        firebomb_firingRate_level,
+        firebomb_speed_level,
+        firebomb_damage_level
+      ) VALUES (?, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)`,
+        [userId],
+      )
+
+      // Re-query to get the newly created record
+      const [newRows] = await db.query(
+        `SELECT * FROM UserUpgrades WHERE user_id = ?`,
+        [userId],
+      )
+      rows = newRows
+    }
+
+    const row = rows[0]
+
+    // Map DB columns to in-game keys
+    const upgradeData = {
+      'hero.health': row.hero_health_level,
+      'hero.speed': row.hero_speed_level,
+
+      'sword.firingRate': row.sword_firingRate_level,
+      'sword.speed': row.sword_speed_level,
+      'sword.damage': row.sword_damage_level,
+
+      'knife.firingRate': row.knife_firingRate_level,
+      'knife.speed': row.knife_speed_level,
+      'knife.damage': row.knife_damage_level,
+
+      'spear.firingRate': row.spear_firingRate_level,
+      'spear.speed': row.spear_speed_level,
+      'spear.damage': row.spear_damage_level,
+
+      'fireball.firingRate': row.fireball_firingRate_level,
+      'fireball.speed': row.fireball_speed_level,
+      'fireball.damage': row.fireball_damage_level,
+
+      'axe.firingRate': row.axe_firingRate_level,
+      'axe.speed': row.axe_speed_level,
+      'axe.damage': row.axe_damage_level,
+
+      'fire_sword.firingRate': row.fire_sword_firingRate_level,
+      'fire_sword.speed': row.fire_sword_speed_level,
+      'fire_sword.damage': row.fire_sword_damage_level,
+
+      'fire_knife.firingRate': row.fire_knife_firingRate_level,
+      'fire_knife.speed': row.fire_knife_speed_level,
+      'fire_knife.damage': row.fire_knife_damage_level,
+
+      'firebomb.firingRate': row.firebomb_firingRate_level,
+      'firebomb.speed': row.firebomb_speed_level,
+      'firebomb.damage': row.firebomb_damage_level,
+    }
+
+    res.json(upgradeData)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Database error' })
+  }
+})
+
 module.exports = router
