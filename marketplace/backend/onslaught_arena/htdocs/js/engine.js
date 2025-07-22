@@ -155,17 +155,28 @@
    * Runs the engine
    * @return {void}
    */
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = src
+      script.onload = resolve
+      script.onerror = reject
+      document.body.appendChild(script)
+    })
+  }
+
   proto.run = function horde_Engine_proto_run() {
     // Fetch upgrades before starting the game
     fetch('/api/onslaught/upgrades', { credentials: 'include' })
       .then((res) => res.json())
       .then((upgradeData) => {
         horde.upgrades = upgradeData
-
-        // Once upgrades are loaded, start the game
-        this.init()
-        this.lastUpdate = horde.now()
-        this.start()
+        return loadScript('js/object_types.js').then(() => {
+          // Once upgrades are loaded, start the game
+          this.init()
+          this.lastUpdate = horde.now()
+          this.start()
+        })
       })
       .catch((err) => {
         console.error('Failed to load upgrades:', err)

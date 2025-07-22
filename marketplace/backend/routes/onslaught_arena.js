@@ -245,4 +245,102 @@ router.get('/upgrades', async (req, res) => {
   }
 })
 
+// POST: Upgrade a specific stat (e.g., hero_health, h_sword_damage)
+router.post('/upgrade', async (req, res) => {
+  const userId = req.cookies.userId
+  const { statKey } = req.body
+
+  if (!userId || !statKey) {
+    return res.status(400).json({ error: 'Missing userId or statKey' })
+  }
+
+  // Upgrade config
+  const upgradeConfig = {
+    hero_health: { maxLevel: 6, costPerLevel: 100 },
+    hero_speed: { maxLevel: 8, costPerLevel: 100 },
+    h_sword_damage: { maxLevel: 6, costPerLevel: 100 },
+    h_sword_speed: { maxLevel: 11, costPerLevel: 100 },
+    h_sword_firingRate: { maxLevel: 21, costPerLevel: 100 },
+    h_knife_damage: { maxLevel: 3, costPerLevel: 100 },
+    h_knife_speed: { maxLevel: 11, costPerLevel: 100 },
+    h_knife_firingRate: { maxLevel: 11, costPerLevel: 100 },
+    h_spear_damage: { maxLevel: 6, costPerLevel: 100 },
+    h_spear_speed: { maxLevel: 21, costPerLevel: 100 },
+    h_spear_firingRate: { maxLevel: 11, costPerLevel: 100 },
+    h_fireball_damage: { maxLevel: 4, costPerLevel: 100 },
+    h_fireball_speed: { maxLevel: 11, costPerLevel: 100 },
+    h_fireball_firingRate: { maxLevel: 11, costPerLevel: 100 },
+    h_axe_damage: { maxLevel: 6, costPerLevel: 100 },
+    h_axe_speed: { maxLevel: 11, costPerLevel: 100 },
+    h_axe_firingRate: { maxLevel: 11, costPerLevel: 100 },
+    h_fire_sword_damage: { maxLevel: 6, costPerLevel: 100 },
+    h_fire_sword_speed: { maxLevel: 11, costPerLevel: 100 },
+    h_fire_sword_firingRate: { maxLevel: 11, costPerLevel: 100 },
+    h_fire_knife_damage: { maxLevel: 6, costPerLevel: 100 },
+    h_fire_knife_speed: { maxLevel: 11, costPerLevel: 100 },
+    h_fire_knife_firingRate: { maxLevel: 11, costPerLevel: 100 },
+    h_fire_bomb_damage: { maxLevel: 3, costPerLevel: 100 },
+    h_fire_bomb_speed: { maxLevel: 11, costPerLevel: 100 },
+    h_fire_bomb_firingRate: { maxLevel: 11, costPerLevel: 100 },
+  }
+
+  const config = upgradeConfig[statKey]
+  if (!config) {
+    return res.status(400).json({ error: 'Invalid stat key' })
+  }
+
+  try {
+    // Get current coin balance and stat level
+    const [[user]] = await db.query(`SELECT coins FROM Users WHERE id = ?`, [
+      userId,
+    ])
+    const [[progress]] = await db.query(
+      `SELECT ${statKey}_level FROM UserUpgrades WHERE user_id = ?`,
+      [userId],
+    )
+
+    if (!user) return res.status(404).json({ error: 'User not found' })
+
+    const currentLevel = progress?.[`${statKey}_level`] || 1
+
+    if (currentLevel >= config.maxLevel) {
+      return res.status(400).json({ error: 'Stat is already maxed out' })
+    }
+
+    if (user.coins < config.costPerLevel) {
+      return res.status(400).json({ error: 'Not enough coins' })
+    }
+
+    // Upgrade: deduct coins + increment level
+    await db.query(`UPDATE Users SET coins = coins - ? WHERE id = ?`, [
+      config.costPerLevel,
+      userId,
+    ])
+    await db.query(
+      `INSERT INTO OnslaughtUpgrades (user_id, ${statKey}_level)
+       VALUES (?, ?)
+       ON DUPLICATE KEY UPDATE ${statKey}_level = ${statKey}_level + 1`,
+      [userId, currentLevel + 1],
+    )
+
+    const [[updatedUser]] = await db.query(
+      `SELECT coins FROM Users WHERE id = ?`,
+      [userId],
+    )
+    const [[updatedUpgrades]] = await db.query(
+      `SELECT * FROM OnslaughtUpgrades WHERE user_id = ?`,
+      [userId],
+    )
+
+    res.json({
+      success: true,
+      coins: updatedUser.coins,
+      upgrades: updatedUpgrades,
+    })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to upgrade stat' })
+  }
+})
+
 module.exports = router

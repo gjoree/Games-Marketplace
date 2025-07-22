@@ -150,7 +150,7 @@
     role: 'hero',
     team: 0,
     speed: getStatValue('hero_speed', horde.upgrades['hero.speed'] ?? 1),
-    hitPoints: getStatValue('hero.health', horde.upgrades['hero.health'] ?? 1),
+    hitPoints: getStatValue('hero_health', horde.upgrades['hero.health'] ?? 1),
     damage: 0,
     damageType: null,
     spriteSheet: 'characters',
@@ -221,12 +221,12 @@
   o.h_sword = {
     role: 'projectile',
     cooldown: getStatValue(
-      'h_sword.firingRate',
-      horde.upgrades['h_sword.firingRate'] ?? 1,
+      'h_sword_firingRate',
+      horde.upgrades['h_swordfiringRate'] ?? 1,
     ),
-    speed: getStatValue('h_sword.speed', horde.upgrades['h_sword.speed'] ?? 1),
+    speed: getStatValue('h_sword_speed', horde.upgrades['h_sword.speed'] ?? 1),
     damage: getStatValue(
-      'h_sword.damage',
+      'h_sword_damage',
       horde.upgrades['h_sword.damage'] ?? 1,
     ),
     hitPoints: 1,
@@ -246,13 +246,13 @@
     role: 'projectile',
     size: new horde.Size(32, 30),
     cooldown: getStatValue(
-      h_knife.firingRate,
+      'h_knife_firingRate',
       horde.upgrades['h_knife.firingRate'] ?? 1,
     ),
-    speed: getStatValue('h_knife.speed', horde.upgrades['h_knife.speed'] ?? 1),
+    speed: getStatValue('h_knife_speed', horde.upgrades['h_knife.speed'] ?? 1),
     hitPoints: 1,
     damage: getStatValue(
-      'h_knife.damage',
+      'h_knife_damage',
       horde.upgrades['h_knife.damage'] ?? 1,
     ),
     spriteSheet: 'objects',
@@ -266,13 +266,13 @@
   o.h_spear = {
     role: 'projectile',
     cooldown: getStatValue(
-      h_spear.firingRate,
+      'h_spear_firingRate',
       horde.upgrades['h_spear.firingRate'] ?? 1,
     ),
-    speed: getStatValue('h_spear.speed', horde.upgrades['h_spear.speed'] ?? 1),
+    speed: getStatValue('h_spear_speed', horde.upgrades['h_spear.speed'] ?? 1),
     hitPoints: 1,
     damage: getStatValue(
-      'h_spear.damage',
+      'h_spear_damage',
       horde.upgrades['h_spear.damage'] ?? 1,
     ),
     spriteSheet: 'objects',
@@ -287,17 +287,17 @@
   o.h_fireball = {
     role: 'projectile',
     cooldown: getStatValue(
-      h_fireball.firingRate,
+      'h_fireball_firingRate',
       horde.upgrades['h_fireball.firingRate'] ?? 1,
     ),
     speed: getStatValue(
-      'h_fireball.speed',
+      'h_fireball_speed',
       horde.upgrades['h_fireball.speed'] ?? 1,
     ),
     rotateSpeed: 500,
     hitPoints: 1,
     damage: getStatValue(
-      'h_fireball.damage',
+      'h_fireball_damage',
       horde.upgrades['h_fireball.damage'] ?? 1,
     ),
     spriteSheet: 'objects',
@@ -394,12 +394,12 @@ o.bomb_smoke = {
   o.h_axe = {
     role: 'projectile',
     cooldown: getStatValue(
-      h_axe.firingRate,
+      'h_axe_firingRate',
       horde.upgrades['h_axe.firingRate'] ?? 1,
     ),
-    speed: getStatValue('h_axe.speed', horde.upgrades['h_axe.speed'] ?? 1),
+    speed: getStatValue('h_axe_speed', horde.upgrades['h_axe.speed'] ?? 1),
     hitPoints: 1,
-    damage: getStatValue('h_axe.damage', horde.upgrades['h_axe.damage'] ?? 1),
+    damage: getStatValue('h_axe_damage', horde.upgrades['h_axe.damage'] ?? 1),
     spriteSheet: 'objects',
     spriteX: 192,
     spriteY: 32,
@@ -417,16 +417,16 @@ o.bomb_smoke = {
   o.h_fire_sword = {
     role: 'projectile',
     cooldown: getStatValue(
-      h_fire_sword.firingRate,
+      'h_fire_sword_firingRate',
       horde.upgrades['h_fire_sword.firingRate'] ?? 1,
     ),
     speed: getStatValue(
-      'h_fire_sword.speed',
+      'h_fire_sword_speed',
       horde.upgrades['h_fire_sword.speed'] ?? 1,
     ),
     hitPoints: 1,
     damage: getStatValue(
-      'h_fire_sword.damage',
+      'h_fire_sword_damage',
       horde.upgrades['h_fire_sword.damage'] ?? 1,
     ),
     spriteSheet: 'objects',
@@ -479,16 +479,16 @@ o.bomb_smoke = {
     role: 'projectile',
     size: new horde.Size(32, 30),
     cooldown: getStatValue(
-      h_fire_knife.firingRate,
+      'h_fire_knife_firingRate',
       horde.upgrades['h_fire_knife.firingRate'] ?? 1,
     ),
     speed: getStatValue(
-      'h_fire_knife.speed',
+      'h_fire_knife_speed',
       horde.upgrades['h_fire_knife.speed'] ?? 1,
     ),
     hitPoints: 1,
     damage: getStatValue(
-      'h_fire_knife.damage',
+      'h_fire_knife_damage',
       horde.upgrades['h_fire_knife.damage'] ?? 1,
     ),
     spriteSheet: 'objects',
@@ -518,17 +518,17 @@ o.bomb_smoke = {
   o.h_firebomb = {
     role: 'projectile',
     cooldown: getStatValue(
-      h_firebomb.firingRate,
+      'h_firebomb_firingRate',
       horde.upgrades['h_firebomb.firingRate'] ?? 1,
     ),
     speed: getStatValue(
-      'h_firebomb.speed',
+      'h_firebomb_speed',
       horde.upgrades['h_firebomb.speed'] ?? 1,
     ),
     rotateSpeed: 300,
     hitPoints: 1,
     damage: getStatValue(
-      'h_firebomb.damage',
+      'h_firebomb_damage',
       horde.upgrades['h_firebomb.damage'] ?? 1,
     ),
     spriteSheet: 'objects',
