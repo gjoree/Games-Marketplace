@@ -1307,6 +1307,12 @@
       if (actualWave > 1) {
         this.putData('checkpoint_wave', this.currentWaveId)
         this.putData('checkpoint_hero', JSON.stringify(this.getPlayerObject()))
+        fetch('/api/onslaught/reward-coins', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ coins: this.currentWaveId * 100 }),
+        })
+        console.log('Rewarded coins for wave', this.currentWaveId * 100)
       }
       if (this.waves[this.currentWaveId].bossWave) {
         waveTextString =

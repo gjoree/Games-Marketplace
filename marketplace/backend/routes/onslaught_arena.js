@@ -122,7 +122,8 @@ router.get('/upgrades', async (req, res) => {
   }
 
   try {
-    var [rows] = await db.query(
+    // Fetch upgrades
+    let [rows] = await db.query(
       `SELECT 
         hero_health_level,
         hero_speed_level,
@@ -155,42 +156,41 @@ router.get('/upgrades', async (req, res) => {
       [userId],
     )
 
+    // If no upgrades exist, create default entry
     if (rows.length === 0) {
-      // Create new record with default values
       await db.query(
         `INSERT INTO UserUpgrades (
-        user_id,
-        hero_health_level,
-        hero_speed_level,
-        sword_firingRate_level,
-        sword_speed_level,
-        sword_damage_level,
-        knife_firingRate_level,
-        knife_speed_level,
-        knife_damage_level,
-        spear_firingRate_level,
-        spear_speed_level,
-        spear_damage_level,
-        fireball_firingRate_level,
-        fireball_speed_level,
-        fireball_damage_level,
-        axe_firingRate_level,
-        axe_speed_level,
-        axe_damage_level,
-        fire_sword_firingRate_level,
-        fire_sword_speed_level,
-        fire_sword_damage_level,
-        fire_knife_firingRate_level,
-        fire_knife_speed_level,
-        fire_knife_damage_level,
-        firebomb_firingRate_level,
-        firebomb_speed_level,
-        firebomb_damage_level
-      ) VALUES (?, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)`,
+          user_id,
+          hero_health_level,
+          hero_speed_level,
+          sword_firingRate_level,
+          sword_speed_level,
+          sword_damage_level,
+          knife_firingRate_level,
+          knife_speed_level,
+          knife_damage_level,
+          spear_firingRate_level,
+          spear_speed_level,
+          spear_damage_level,
+          fireball_firingRate_level,
+          fireball_speed_level,
+          fireball_damage_level,
+          axe_firingRate_level,
+          axe_speed_level,
+          axe_damage_level,
+          fire_sword_firingRate_level,
+          fire_sword_speed_level,
+          fire_sword_damage_level,
+          fire_knife_firingRate_level,
+          fire_knife_speed_level,
+          fire_knife_damage_level,
+          firebomb_firingRate_level,
+          firebomb_speed_level,
+          firebomb_damage_level
+        ) VALUES (?, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)`,
         [userId],
       )
 
-      // Re-query to get the newly created record
       const [newRows] = await db.query(
         `SELECT * FROM UserUpgrades WHERE user_id = ?`,
         [userId],
@@ -200,42 +200,51 @@ router.get('/upgrades', async (req, res) => {
 
     const row = rows[0]
 
-    // Map DB columns to in-game keys
+    // Fetch coin balance
+    const [[user]] = await db.query(
+      `SELECT coins FROM Users WHERE user_id = ?`,
+      [userId],
+    )
+
+    // Map DB upgrades to FE keys
     const upgradeData = {
-      'hero.health': row.hero_health_level,
-      'hero.speed': row.hero_speed_level,
+      coins: user?.coins ?? 0,
+      upgrades: {
+        'hero.health': row.hero_health_level,
+        'hero.speed': row.hero_speed_level,
 
-      'sword.firingRate': row.sword_firingRate_level,
-      'sword.speed': row.sword_speed_level,
-      'sword.damage': row.sword_damage_level,
+        'sword.firingRate': row.sword_firingRate_level,
+        'sword.speed': row.sword_speed_level,
+        'sword.damage': row.sword_damage_level,
 
-      'knife.firingRate': row.knife_firingRate_level,
-      'knife.speed': row.knife_speed_level,
-      'knife.damage': row.knife_damage_level,
+        'knife.firingRate': row.knife_firingRate_level,
+        'knife.speed': row.knife_speed_level,
+        'knife.damage': row.knife_damage_level,
 
-      'spear.firingRate': row.spear_firingRate_level,
-      'spear.speed': row.spear_speed_level,
-      'spear.damage': row.spear_damage_level,
+        'spear.firingRate': row.spear_firingRate_level,
+        'spear.speed': row.spear_speed_level,
+        'spear.damage': row.spear_damage_level,
 
-      'fireball.firingRate': row.fireball_firingRate_level,
-      'fireball.speed': row.fireball_speed_level,
-      'fireball.damage': row.fireball_damage_level,
+        'fireball.firingRate': row.fireball_firingRate_level,
+        'fireball.speed': row.fireball_speed_level,
+        'fireball.damage': row.fireball_damage_level,
 
-      'axe.firingRate': row.axe_firingRate_level,
-      'axe.speed': row.axe_speed_level,
-      'axe.damage': row.axe_damage_level,
+        'axe.firingRate': row.axe_firingRate_level,
+        'axe.speed': row.axe_speed_level,
+        'axe.damage': row.axe_damage_level,
 
-      'fire_sword.firingRate': row.fire_sword_firingRate_level,
-      'fire_sword.speed': row.fire_sword_speed_level,
-      'fire_sword.damage': row.fire_sword_damage_level,
+        'fire_sword.firingRate': row.fire_sword_firingRate_level,
+        'fire_sword.speed': row.fire_sword_speed_level,
+        'fire_sword.damage': row.fire_sword_damage_level,
 
-      'fire_knife.firingRate': row.fire_knife_firingRate_level,
-      'fire_knife.speed': row.fire_knife_speed_level,
-      'fire_knife.damage': row.fire_knife_damage_level,
+        'fire_knife.firingRate': row.fire_knife_firingRate_level,
+        'fire_knife.speed': row.fire_knife_speed_level,
+        'fire_knife.damage': row.fire_knife_damage_level,
 
-      'firebomb.firingRate': row.firebomb_firingRate_level,
-      'firebomb.speed': row.firebomb_speed_level,
-      'firebomb.damage': row.firebomb_damage_level,
+        'firebomb.firingRate': row.firebomb_firingRate_level,
+        'firebomb.speed': row.firebomb_speed_level,
+        'firebomb.damage': row.firebomb_damage_level,
+      },
     }
 
     res.json(upgradeData)
@@ -258,30 +267,30 @@ router.post('/upgrade', async (req, res) => {
   const upgradeConfig = {
     hero_health: { maxLevel: 6, costPerLevel: 100 },
     hero_speed: { maxLevel: 8, costPerLevel: 100 },
-    h_sword_damage: { maxLevel: 6, costPerLevel: 100 },
-    h_sword_speed: { maxLevel: 11, costPerLevel: 100 },
-    h_sword_firingRate: { maxLevel: 21, costPerLevel: 100 },
-    h_knife_damage: { maxLevel: 3, costPerLevel: 100 },
-    h_knife_speed: { maxLevel: 11, costPerLevel: 100 },
-    h_knife_firingRate: { maxLevel: 11, costPerLevel: 100 },
-    h_spear_damage: { maxLevel: 6, costPerLevel: 100 },
-    h_spear_speed: { maxLevel: 21, costPerLevel: 100 },
-    h_spear_firingRate: { maxLevel: 11, costPerLevel: 100 },
-    h_fireball_damage: { maxLevel: 4, costPerLevel: 100 },
-    h_fireball_speed: { maxLevel: 11, costPerLevel: 100 },
-    h_fireball_firingRate: { maxLevel: 11, costPerLevel: 100 },
-    h_axe_damage: { maxLevel: 6, costPerLevel: 100 },
-    h_axe_speed: { maxLevel: 11, costPerLevel: 100 },
-    h_axe_firingRate: { maxLevel: 11, costPerLevel: 100 },
-    h_fire_sword_damage: { maxLevel: 6, costPerLevel: 100 },
-    h_fire_sword_speed: { maxLevel: 11, costPerLevel: 100 },
-    h_fire_sword_firingRate: { maxLevel: 11, costPerLevel: 100 },
-    h_fire_knife_damage: { maxLevel: 6, costPerLevel: 100 },
-    h_fire_knife_speed: { maxLevel: 11, costPerLevel: 100 },
-    h_fire_knife_firingRate: { maxLevel: 11, costPerLevel: 100 },
-    h_fire_bomb_damage: { maxLevel: 3, costPerLevel: 100 },
-    h_fire_bomb_speed: { maxLevel: 11, costPerLevel: 100 },
-    h_fire_bomb_firingRate: { maxLevel: 11, costPerLevel: 100 },
+    sword_damage: { maxLevel: 6, costPerLevel: 100 },
+    sword_speed: { maxLevel: 11, costPerLevel: 100 },
+    sword_firingRate: { maxLevel: 21, costPerLevel: 100 },
+    knife_damage: { maxLevel: 3, costPerLevel: 100 },
+    knife_speed: { maxLevel: 11, costPerLevel: 100 },
+    knife_firingRate: { maxLevel: 11, costPerLevel: 100 },
+    spear_damage: { maxLevel: 6, costPerLevel: 100 },
+    spear_speed: { maxLevel: 21, costPerLevel: 100 },
+    spear_firingRate: { maxLevel: 11, costPerLevel: 100 },
+    fireball_damage: { maxLevel: 4, costPerLevel: 100 },
+    fireball_speed: { maxLevel: 11, costPerLevel: 100 },
+    fireball_firingRate: { maxLevel: 11, costPerLevel: 100 },
+    axe_damage: { maxLevel: 6, costPerLevel: 100 },
+    axe_speed: { maxLevel: 11, costPerLevel: 100 },
+    axe_firingRate: { maxLevel: 11, costPerLevel: 100 },
+    fire_sword_damage: { maxLevel: 6, costPerLevel: 100 },
+    fire_sword_speed: { maxLevel: 11, costPerLevel: 100 },
+    fire_sword_firingRate: { maxLevel: 11, costPerLevel: 100 },
+    fire_knife_damage: { maxLevel: 6, costPerLevel: 100 },
+    fire_knife_speed: { maxLevel: 11, costPerLevel: 100 },
+    fire_knife_firingRate: { maxLevel: 11, costPerLevel: 100 },
+    firebomb_damage: { maxLevel: 3, costPerLevel: 100 },
+    firebomb_speed: { maxLevel: 11, costPerLevel: 100 },
+    firebomb_firingRate: { maxLevel: 11, costPerLevel: 100 },
   }
 
   const config = upgradeConfig[statKey]
@@ -291,9 +300,10 @@ router.post('/upgrade', async (req, res) => {
 
   try {
     // Get current coin balance and stat level
-    const [[user]] = await db.query(`SELECT coins FROM Users WHERE id = ?`, [
-      userId,
-    ])
+    const [[user]] = await db.query(
+      `SELECT coins FROM Users WHERE user_id = ?`,
+      [userId],
+    )
     const [[progress]] = await db.query(
       `SELECT ${statKey}_level FROM UserUpgrades WHERE user_id = ?`,
       [userId],
@@ -312,23 +322,23 @@ router.post('/upgrade', async (req, res) => {
     }
 
     // Upgrade: deduct coins + increment level
-    await db.query(`UPDATE Users SET coins = coins - ? WHERE id = ?`, [
+    await db.query(`UPDATE Users SET coins = coins - ? WHERE user_id = ?`, [
       config.costPerLevel,
       userId,
     ])
     await db.query(
-      `INSERT INTO OnslaughtUpgrades (user_id, ${statKey}_level)
+      `INSERT INTO UserUpgrades (user_id, ${statKey}_level)
        VALUES (?, ?)
        ON DUPLICATE KEY UPDATE ${statKey}_level = ${statKey}_level + 1`,
       [userId, currentLevel + 1],
     )
 
     const [[updatedUser]] = await db.query(
-      `SELECT coins FROM Users WHERE id = ?`,
+      `SELECT coins FROM Users WHERE user_id = ?`,
       [userId],
     )
     const [[updatedUpgrades]] = await db.query(
-      `SELECT * FROM OnslaughtUpgrades WHERE user_id = ?`,
+      `SELECT * FROM UserUpgrades WHERE user_id = ?`,
       [userId],
     )
 
@@ -340,6 +350,33 @@ router.post('/upgrade', async (req, res) => {
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Failed to upgrade stat' })
+  }
+})
+
+// Add coins to user's account
+router.post('/reward-coins', async (req, res) => {
+  const userId = req.cookies.userId
+  const { coins } = req.body
+
+  if (!userId || typeof coins !== 'number' || coins <= 0) {
+    return res.status(400).json({ error: 'Missing or invalid userId/coins' })
+  }
+
+  try {
+    await db.query(`UPDATE Users SET coins = coins + ? WHERE user_id = ?`, [
+      coins,
+      userId,
+    ])
+
+    const [[user]] = await db.query(
+      `SELECT coins FROM Users WHERE user_id = ?`,
+      [userId],
+    )
+
+    res.json({ success: true, coins: user.coins })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to update coins' })
   }
 })
 
