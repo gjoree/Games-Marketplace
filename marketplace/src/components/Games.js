@@ -12,9 +12,9 @@ const Games = () => {
     },
     {
       id: 'racer',
-      title: 'Racer Game',
+      title: 'Top Racer',
       thumbnail: 'https://img.youtube.com/vi/Y92aG3YagXU/hqdefault.jpg',
-      url: 'http://localhost:5059/racer',
+      url: 'http://localhost:5059/racer/v4.final.html',
     },
     {
       id: 'onslaught',
@@ -27,9 +27,6 @@ const Games = () => {
   const handleThumbnailClick = (url) => {
     // Redirect in the current tab:
     window.location.href = url
-
-    // If you want to open in a **new tab** instead:
-    // window.open(url, '_blank');
   }
 
   return (

@@ -112,7 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
           console.error('Failed to update user progress', err)
         })
 
-      if (sokoban.level === 29) {
+      //ADD HERE TO RESET LEVEL TO 0 IN DB IF LEVEL 49
+      if (sokoban.level === 49) {
         $('#canvas').hide()
         $('#dialog').dialog('open')
         return
