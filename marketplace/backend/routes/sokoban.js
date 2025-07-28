@@ -66,4 +66,20 @@ router.post('/complete-level', async (req, res) => {
   }
 })
 
+// POST /api/sokoban/reset
+router.post('/reset', async (req, res) => {
+  const userId = req.cookies.userId
+  if (!userId) return res.status(401).json({ error: 'Unauthorized' })
+
+  try {
+    await db.query('UPDATE Users SET maxLevel_Sokoban = 0 WHERE user_id = ?', [
+      userId,
+    ])
+    res.json({ success: true })
+  } catch (err) {
+    console.error('Failed to reset Sokoban progress:', err)
+    res.status(500).json({ error: 'Database error' })
+  }
+})
+
 module.exports = router

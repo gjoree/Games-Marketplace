@@ -112,8 +112,21 @@ document.addEventListener('DOMContentLoaded', () => {
           console.error('Failed to update user progress', err)
         })
 
-      //ADD HERE TO RESET LEVEL TO 0 IN DB IF LEVEL 49
       if (sokoban.level === 49) {
+        // Call API to reset the user's progress
+        fetch('/api/sokoban/reset', {
+          method: 'POST',
+          credentials: 'include',
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (!data.success) throw new Error(data.error || 'Reset failed')
+            console.log('Sokoban progress reset')
+          })
+          .catch((err) => {
+            console.error('Reset error:', err)
+          })
+
         $('#canvas').hide()
         $('#dialog').dialog('open')
         return
