@@ -8,12 +8,16 @@ const GAMES = [
     image: 'https://www.typinggames.zone/web/game-thumbnails/arena2.png',
   },
   {
-    key: 'dummy',
-    name: 'Dummy Game',
-    image:
-      'https://play-lh.googleusercontent.com/IVTpt37tHBQ5u7SOzD4y7OCipsq2xRkDv1h-qYKO_Mab_MLFsPFOXpuVJpjfATyMDRQ=w526-h296-rw',
+    key: 'racer',
+    name: 'Top Racer',
+    image: 'https://img.youtube.com/vi/Y92aG3YagXU/hqdefault.jpg',
   },
 ]
+
+const RACER_UPGRADE_KEYS = {
+  Vehicle: ['speed', 'acceleration', 'braking'],
+  Vision: ['fog_density', 'draw_distance'],
+}
 
 const UPGRADE_KEYS = {
   Hero: ['hero.health', 'hero.speed'],
@@ -34,38 +38,39 @@ const Marketplace = () => {
   const [coins, setCoins] = useState(0)
   const [message, setMessage] = useState(null)
 
-  // Helper function to format keys
   const formatKey = (key) => {
-    const [type, stat] = key.split('.')
-
-    // Process type: convert underscores to spaces and capitalize each word
-    const formattedType = type
-      .split('_')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ')
-
-    // Process stat: split camelCase and capitalize each word
-    const formattedStat = stat
-      .replace(/([A-Z])/g, ' $1') // Split camelCase
-      .split(' ')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ')
-
-    return `${formattedType} ${formattedStat}`
+    if (key.includes('.')) {
+      const [type, stat] = key.split('.')
+      const formattedType = type
+        .split('_')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+      const formattedStat = stat
+        .replace(/([A-Z])/g, ' $1')
+        .split(' ')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+      return `${formattedType} ${formattedStat}`
+    } else {
+      return key
+        .split('_')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+    }
   }
 
   const fetchUpgrades = useCallback(() => {
-    if (selectedGame === 'onslaught') {
-      fetch(`${process.env.REACT_APP_API}/api/onslaught/upgrades`, {
-        credentials: 'include',
+    if (!selectedGame) return
+    const route = selectedGame === 'onslaught' ? 'onslaught' : 'racer'
+    fetch(`${process.env.REACT_APP_API}/api/${route}/upgrades`, {
+      credentials: 'include',
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setCoins(data.coins || 0)
+        setUpgrades(data.upgrades || {})
       })
-        .then((res) => res.json())
-        .then((data) => {
-          setCoins(data.coins || 0)
-          setUpgrades(data.upgrades || {})
-        })
-        .catch((err) => console.error('Failed to fetch upgrades:', err))
-    }
+      .catch((err) => console.error('Failed to fetch upgrades:', err))
   }, [selectedGame])
 
   useEffect(() => {
@@ -75,13 +80,16 @@ const Marketplace = () => {
   const handleUpgrade = async (key) => {
     try {
       window.scrollTo({ top: 0, behavior: 'smooth' })
+      const route = selectedGame === 'onslaught' ? 'onslaught' : 'racer'
+      const statKey = selectedGame === 'onslaught' ? key.replace('.', '_') : key
+
       const res = await fetch(
-        `${process.env.REACT_APP_API}/api/onslaught/upgrade`,
+        `${process.env.REACT_APP_API}/api/${route}/upgrade`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
-          body: JSON.stringify({ statKey: key.replace('.', '_') }),
+          body: JSON.stringify({ statKey }),
         },
       )
       const data = await res.json()
@@ -136,10 +144,6 @@ const Marketplace = () => {
                   transition: 'all 0.3s ease',
                   width: '200px',
                   textAlign: 'center',
-                  ':hover': {
-                    transform: 'translateY(-5px)',
-                    boxShadow: '0 5px 15px rgba(0,0,0,0.1)',
-                  },
                 }}
               >
                 <img
@@ -158,7 +162,7 @@ const Marketplace = () => {
             ))}
           </div>
 
-          {selectedGame === 'onslaught' && (
+          {selectedGame && (
             <div
               style={{
                 backgroundColor: '#fff',
@@ -220,7 +224,11 @@ const Marketplace = () => {
                   gap: '20px',
                 }}
               >
-                {Object.entries(UPGRADE_KEYS).map(([group, keys]) => (
+                {Object.entries(
+                  selectedGame === 'onslaught'
+                    ? UPGRADE_KEYS
+                    : RACER_UPGRADE_KEYS,
+                ).map(([group, keys]) => (
                   <div
                     key={group}
                     style={{
@@ -265,7 +273,10 @@ const Marketplace = () => {
                             <div
                               style={{ fontSize: '0.9em', color: '#7f8c8d' }}
                             >
-                              Level: {upgrades[key] || 1}
+                              Level:{' '}
+                              {selectedGame === 'racer'
+                                ? upgrades[`${key}_level`] || 1
+                                : upgrades[key] || 1}
                             </div>
                           </div>
                           <button
@@ -278,9 +289,6 @@ const Marketplace = () => {
                               borderRadius: '4px',
                               cursor: 'pointer',
                               transition: 'background-color 0.2s',
-                              ':hover': {
-                                backgroundColor: '#6200ea',
-                              },
                             }}
                           >
                             Upgrade

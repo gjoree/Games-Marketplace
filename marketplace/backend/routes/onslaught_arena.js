@@ -264,6 +264,7 @@ router.post('/upgrade', async (req, res) => {
   }
 
   // Upgrade config
+  //TODO: make costPerLevel dynamic based on level
   const upgradeConfig = {
     hero_health: { maxLevel: 6, costPerLevel: 100 },
     hero_speed: { maxLevel: 8, costPerLevel: 100 },
