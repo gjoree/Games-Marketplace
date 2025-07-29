@@ -267,7 +267,7 @@
             segmentLength,
           1,
         )
-
+        let coinsEarned = 0
         if (position > playerZ) {
           if (currentLapTime && startPosition < playerZ) {
             lastLapTime = currentLapTime
@@ -277,12 +277,36 @@
               updateHud('fast_lap_time', formatTime(lastLapTime))
               Dom.addClassName('fast_lap_time', 'fastest')
               Dom.addClassName('last_lap_time', 'fastest')
+              coinsEarned = 10
+
+              // Send to DB only when it's a new best lap
+              fetch('/api/racer/updateBestLap', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ bestLap: lastLapTime }),
+              })
+                .then((res) => res.json())
+                .then((data) => {
+                  if (!data.success)
+                    console.warn('Lap time update failed:', data.error)
+                })
+                .catch((err) => {
+                  console.error('Error updating best lap time:', err)
+                })
             } else {
+              coinsEarned = 5 // Base reward per lap
               Dom.removeClassName('fast_lap_time', 'fastest')
               Dom.removeClassName('last_lap_time', 'fastest')
             }
             updateHud('last_lap_time', formatTime(lastLapTime))
             Dom.show('last_lap_time')
+            fetch('http://localhost:5059/api/racer/award-coins', {
+              method: 'POST',
+              credentials: 'include',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ coins: coinsEarned }),
+            })
           } else {
             currentLapTime += dt
           }

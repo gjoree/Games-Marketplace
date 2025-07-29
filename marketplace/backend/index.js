@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const authRoutes = require('./routes/auth')
 const sokobanRoutes = require('./routes/sokoban')
+const leaderboardRoutes = require('./routes/leaderboard')
 const onslaughtArenaRoutes = require('./routes/onslaught_arena')
 const path = require('path')
 const racerRoutes = require('./routes/racer')
@@ -36,6 +37,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/sokoban', sokobanRoutes)
 app.use('/api/onslaught', onslaughtArenaRoutes)
 app.use('/api/racer', racerRoutes)
+app.use('/api/leaderboard', leaderboardRoutes)
 
 // --- FALLBACK TO RACER ENTRYPOINT (HTML) ---
 app.get('/racer', (req, res) => {

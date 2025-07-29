@@ -164,4 +164,45 @@ router.post('/upgrade', async (req, res) => {
   }
 })
 
+// /api/racer/updateBestLap
+router.post('/updateBestLap', async (req, res) => {
+  const { bestLap } = req.body
+  const userId = req.cookies.userId
+  if (!userId) return res.status(401).json({ error: 'Unauthorized' })
+
+  try {
+    await db.query(
+      `
+      INSERT INTO RacerStats (user_id, best_lap_time)
+      VALUES (?, ?)
+      ON DUPLICATE KEY UPDATE best_lap_time = LEAST(best_lap_time, ?)
+    `,
+      [userId, bestLap, bestLap],
+    )
+
+    res.json({ success: true })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Database error' })
+  }
+})
+
+router.post('/award-coins', async (req, res) => {
+  const userId = req.cookies.userId
+  const { coins } = req.body
+
+  if (!userId) return res.status(401).json({ error: 'Unauthorized' })
+
+  try {
+    await db.query(`UPDATE Users SET coins = coins + ? WHERE user_id = ?`, [
+      coins,
+      userId,
+    ])
+    res.json({ success: true, added: coins })
+  } catch (err) {
+    console.error('Failed to award coins:', err)
+    res.status(500).json({ error: 'Database error' })
+  }
+})
+
 module.exports = router

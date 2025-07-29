@@ -3,9 +3,11 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import Home from './components/Home'
 import Marketplace from './components/Marketplace'
 import Games from './components/Games'
+import Leaderboard from './components/Leaderboard'
 import { FaHome, FaCoins, FaSignInAlt } from 'react-icons/fa'
 import { GiAk47U } from 'react-icons/gi'
 import { CiLogout } from 'react-icons/ci'
+import { MdOutlineLeaderboard } from 'react-icons/md'
 import axios from 'axios'
 import useAuthUser from './hooks/useAuthUser'
 
@@ -103,6 +105,11 @@ const App = () => {
                 </Link>
               </li>
               <li>
+                <Link to='/leaderboard' className='navbar-link'>
+                  <MdOutlineLeaderboard /> Leaderboard
+                </Link>
+              </li>
+              <li>
                 {user ? (
                   <Link to='#' className='navbar-link' onClick={handleLogout}>
                     <CiLogout /> Logout
@@ -168,6 +175,7 @@ const App = () => {
           <Route path='/' element={<Home />} />
           <Route path='/marketplace' element={<Marketplace />} />
           <Route path='/games' element={<Games />} />
+          <Route path='/leaderboard' element={<Leaderboard />} />
         </Routes>
 
         <footer className='footer'>

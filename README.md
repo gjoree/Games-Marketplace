@@ -17,6 +17,13 @@ Steps to start the project:
 If you make changes to the sokoban files in the backend, make sure to run `npx webpack` while in the sokoban folder, so the new scripts can be executed. Delete the old ones and the new dist file. Make sure to restart the back-end after doing changes.
 
 TODO: See if there is a difference if the start of onslaught arena game arguments are pulled from the database or from local storage as it is now.
-TODO: Implement the leaderboard system and try to reward the top 3 players with additional incentives (per day/24h?).
+TODO: Implement the leaderboard system and try to reward the top 3 players with additional incentives (per day/24h?). The cronjob is not finished.
 TODO: Add game-sessions in a sense that count the time the user spent playing each game, see what is upgraded. Maybe divide the coins into 3 different game coins and combine them into 1 for better analysis. Also a transaction table might be good aswell, what upgrade was bought, when and how many coins were spent.
-TODO: Add dynamic cost per level of stats on all games, and work on the economy
+TODO: Add dynamic cost per level of stats on all games, and work on the economy.
+
+The current economy status:
+
+- Sokoban level pass = +100
+- Top Racer new lap = if new record then +10 else +5
+- Onslaught Arena new wave = 100 \* number of wave (too much)
+- All upgrades cost 100 coins for now
