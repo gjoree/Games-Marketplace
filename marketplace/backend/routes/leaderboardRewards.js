@@ -1,5 +1,5 @@
 const cron = require('node-cron')
-const db = require('./db')
+const db = require('../db')
 
 const rewardAmounts = [300, 200, 100]
 
