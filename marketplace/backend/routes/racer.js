@@ -137,6 +137,21 @@ router.post('/upgrade', async (req, res) => {
       [userId],
     )
 
+    // 🧾 Log the transaction
+    await db.query(
+      `INSERT INTO UpgradeTransactions (
+         user_id, game, upgrade_type, previous_level, new_level, cost
+       ) VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        userId,
+        'racer',
+        statKey,
+        currentLevel,
+        currentLevel + 1,
+        config.costPerLevel,
+      ],
+    )
+
     // Return updated values
     const [[updatedUser]] = await db.query(
       `SELECT coins FROM Users WHERE user_id = ?`,
@@ -194,10 +209,15 @@ router.post('/award-coins', async (req, res) => {
   if (!userId) return res.status(401).json({ error: 'Unauthorized' })
 
   try {
-    await db.query(`UPDATE Users SET coins = coins + ? WHERE user_id = ?`, [
-      coins,
-      userId,
-    ])
+    await db.query(
+      `
+      UPDATE Users
+      SET coins = coins + ?,
+          coins_from_racer = coins_from_racer + ?
+      WHERE user_id = ?
+      `,
+      [coins, coins, userId],
+    )
     res.json({ success: true, added: coins })
   } catch (err) {
     console.error('Failed to award coins:', err)

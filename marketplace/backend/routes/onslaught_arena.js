@@ -334,6 +334,21 @@ router.post('/upgrade', async (req, res) => {
       [userId, currentLevel + 1],
     )
 
+    // 🧾 Log the transaction
+    await db.query(
+      `INSERT INTO UpgradeTransactions (
+         user_id, game, upgrade_type, previous_level, new_level, cost
+       ) VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        userId,
+        'onslaught',
+        statKey,
+        currentLevel,
+        currentLevel + 1,
+        config.costPerLevel,
+      ],
+    )
+
     const [[updatedUser]] = await db.query(
       `SELECT coins FROM Users WHERE user_id = ?`,
       [userId],
@@ -364,10 +379,15 @@ router.post('/reward-coins', async (req, res) => {
   }
 
   try {
-    await db.query(`UPDATE Users SET coins = coins + ? WHERE user_id = ?`, [
-      coins,
-      userId,
-    ])
+    await db.query(
+      `
+      UPDATE Users
+      SET coins = coins + ?,
+        coins_from_arena = coins_from_arena + ?
+      WHERE user_id = ?
+      `,
+      [coins, coins, userId],
+    )
 
     const [[user]] = await db.query(
       `SELECT coins FROM Users WHERE user_id = ?`,

@@ -9,6 +9,7 @@ const leaderboardRoutes = require('./routes/leaderboard')
 const onslaughtArenaRoutes = require('./routes/onslaught_arena')
 const path = require('path')
 const racerRoutes = require('./routes/racer')
+const sessionRoutes = require('./routes/sessions')
 
 const app = express()
 
@@ -39,6 +40,7 @@ app.use('/api/sokoban', sokobanRoutes)
 app.use('/api/onslaught', onslaughtArenaRoutes)
 app.use('/api/racer', racerRoutes)
 app.use('/api/leaderboard', leaderboardRoutes)
+app.use('/api/sessions', sessionRoutes)
 
 // --- FALLBACK TO RACER ENTRYPOINT (HTML) ---
 app.get('/racer', (req, res) => {

@@ -1091,5 +1091,24 @@
 
       //=========================================================================
     </script>
+    <script>
+      // Start session when page loads
+      fetch('http://localhost:5059/api/sessions/start', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ game: 'racer' }),
+      })
+
+      // End session when the user leaves or reloads
+      window.addEventListener('beforeunload', function () {
+        navigator.sendBeacon(
+          'http://localhost:5059/api/sessions/end',
+          new Blob([JSON.stringify({ game: 'racer' })], {
+            type: 'application/json',
+          }),
+        )
+      })
+    </script>
   </body>
 </html>
