@@ -33,8 +33,12 @@ const Games = () => {
     <div className='page-content'>
       {user ? (
         <>
-          <h1>Games</h1>
-          <p>Click on a game to play:</p>
+          <h1 className='text-4xl md:text-5xl font-bold text-center mt-0 mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-[#6200ea]'>
+            Games
+          </h1>
+          <p className='text-lg text-gray-600 text-center mb-12'>
+            Click on a game to play:
+          </p>
           <div
             style={{
               display: 'flex',

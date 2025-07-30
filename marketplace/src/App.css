@@ -204,3 +204,22 @@ iframe {
 .page-content {
   animation: fadeIn 0.8s ease-in-out;
 }
+
+.podium-container {
+  perspective: 1000px;
+}
+
+.podium-step {
+  transform-style: preserve-3d;
+  transition: all 0.3s ease;
+}
+
+.podium-step:hover {
+  transform: translateZ(20px) scale(1.05);
+}
+
+.daily-reward-timer {
+  margin: 1rem 0;
+  font-size: 1.2rem;
+  color: #333;
+}

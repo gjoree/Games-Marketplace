@@ -112,10 +112,10 @@ const Marketplace = () => {
     >
       {user ? (
         <>
-          <h1 style={{ color: '#2c3e50', marginBottom: '20px' }}>
+          <h1 className='text-4xl md:text-5xl font-bold text-center mt-0 mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-[#6200ea]'>
             Welcome to the Marketplace
           </h1>
-          <p style={{ color: '#7f8c8d', marginBottom: '30px' }}>
+          <p className='text-lg text-gray-600 text-center mb-12'>
             Select a game to upgrade stats.
           </p>
 
