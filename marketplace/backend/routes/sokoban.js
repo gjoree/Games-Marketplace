@@ -50,12 +50,17 @@ router.post('/complete-level', async (req, res) => {
 
     const { maxLevel_Sokoban, Coins } = rows[0]
     const newCoins = Coins + 10
+    const earnedCoins = 10 // Fixed reward for completing a level
 
     // Only update if it's a new level
     if (level > maxLevel_Sokoban) {
       await db.query(
-        'UPDATE Users SET maxLevel_Sokoban = ?, Coins = ? WHERE user_id = ?',
-        [level, newCoins, userId],
+        `UPDATE Users 
+     SET maxLevel_Sokoban = ?, 
+         Coins = ?, 
+         coins_from_sokoban = coins_from_sokoban + ? 
+     WHERE user_id = ?`,
+        [level, newCoins, earnedCoins, userId],
       )
     }
 

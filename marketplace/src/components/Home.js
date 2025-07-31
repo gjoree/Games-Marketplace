@@ -14,15 +14,10 @@ const Home = () => {
             upgrades of stats!
           </p>
           <p className='text-md text-gray-700 text-center mb-4'>
-            Compete for the top spots on the leaderboard! The 3 best players of
-            each game are awarded coins: 300 for 1st, 200 for 2nd, and 100 for
-            3rd place. Update your stats to climb higher and earn more rewards!
+            For this demo and trial version, please dedicate some time,
+            approximately an hour to each game, to experience the games and
+            provide feedback if possible.
           </p>
-          <ul className='text-md text-gray-700 text-center mb-12 list-disc list-inside'>
-            <li>Sokoban: Earn coins for passing each level.</li>
-            <li>Top Racer: Get coins when you beat your best lap time.</li>
-            <li>Onslaught Arena: Receive coins for passing each wave.</li>
-          </ul>
         </>
       ) : (
         <>

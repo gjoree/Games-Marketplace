@@ -9,6 +9,8 @@ const leaderboardRoutes = require('./routes/leaderboard')
 const onslaughtArenaRoutes = require('./routes/onslaught_arena')
 const path = require('path')
 const racerRoutes = require('./routes/racer')
+const sessionRoutes = require('./routes/sessions')
+const logRoutes = require('./routes/log')
 
 const app = express()
 
@@ -26,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public'))) // For /common.js, /comm
 // --- MIDDLEWARE ---
 app.use(
   cors({
-    origin: 'http://localhost:3300', // Frontend URL
+    origin: `${process.env.REACT_APP_FE}`, // Frontend URL
     credentials: true,
   }),
 )
@@ -39,6 +41,8 @@ app.use('/api/sokoban', sokobanRoutes)
 app.use('/api/onslaught', onslaughtArenaRoutes)
 app.use('/api/racer', racerRoutes)
 app.use('/api/leaderboard', leaderboardRoutes)
+app.use('/api/sessions', sessionRoutes)
+app.use('/api/log', logRoutes)
 
 // --- FALLBACK TO RACER ENTRYPOINT (HTML) ---
 app.get('/racer', (req, res) => {

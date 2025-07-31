@@ -1,6 +1,18 @@
 import { useEffect, useState, useCallback } from 'react'
 import useAuthUser from '../hooks/useAuthUser'
 
+import heroIcon from '../assets/heroIcon.png'
+import swordIcon from '../assets/swordIcon.png'
+import axeIcon from '../assets/Raider-Axe.png'
+import fireballIcon from '../assets/fireBallIcon.png'
+import knifeIcon from '../assets/knifeIcon.jpg'
+import spearIcon from '../assets/spearIcon.png'
+import fireSwordIcon from '../assets/fireSwordIcon.jpg'
+import fireKnifeIcon from '../assets/flamingKnifeIcon.png'
+import firebombIcon from '../assets/fireBombIcon.png'
+import carIcon from '../assets/carIcon.jpg'
+import visionIcon from '../assets/visionIcon.jpg'
+
 const GAMES = [
   {
     key: 'onslaught',
@@ -29,6 +41,21 @@ const UPGRADE_KEYS = {
   Firebomb: ['firebomb.damage', 'firebomb.speed', 'firebomb.firingRate'],
   Axe: ['axe.damage', 'axe.speed', 'axe.firingRate'],
   Fireball: ['fireball.damage', 'fireball.speed', 'fireball.firingRate'],
+}
+
+// Map categories to their icons
+const CATEGORY_ICONS = {
+  Hero: heroIcon,
+  Sword: swordIcon,
+  Knife: knifeIcon,
+  Spear: spearIcon,
+  FireSword: fireSwordIcon,
+  FireKnife: fireKnifeIcon,
+  Firebomb: firebombIcon,
+  Axe: axeIcon,
+  Fireball: fireballIcon,
+  Vehicle: carIcon,
+  Vision: visionIcon,
 }
 
 const Marketplace = () => {
@@ -238,63 +265,125 @@ const Marketplace = () => {
                       boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                     }}
                   >
-                    <h3
+                    <div
                       style={{
-                        marginTop: '0',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
                         marginBottom: '15px',
-                        color: '#6200ea',
-                        borderBottom: '1px solid #dfe6e9',
-                        paddingBottom: '8px',
                       }}
                     >
-                      {group} Upgrades
-                    </h3>
+                      <img
+                        src={CATEGORY_ICONS[group]}
+                        alt={group}
+                        style={{
+                          width: '32px',
+                          height: '32px',
+                          objectFit: 'contain',
+                          filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.1))',
+                        }}
+                      />
+                      <h3
+                        style={{
+                          margin: '0',
+                          color: '#6200ea',
+                          borderBottom: '1px solid #dfe6e9',
+                          paddingBottom: '8px',
+                          flex: 1,
+                        }}
+                      >
+                        {group} Upgrades
+                      </h3>
+                    </div>
+
                     <ul
                       style={{ listStyle: 'none', padding: '0', margin: '0' }}
                     >
-                      {keys.map((key) => (
-                        <li
-                          key={key}
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            marginBottom: '10px',
-                            padding: '8px 0',
-                            borderBottom: '1px dotted #dfe6e9',
-                          }}
-                        >
-                          <div>
-                            <div
-                              style={{ fontWeight: '500', color: '#2c3e50' }}
-                            >
-                              {formatKey(key)}
-                            </div>
-                            <div
-                              style={{ fontSize: '0.9em', color: '#7f8c8d' }}
-                            >
-                              Level:{' '}
-                              {selectedGame === 'racer'
-                                ? upgrades[`${key}_level`] || 1
-                                : upgrades[key] || 1}
-                            </div>
-                          </div>
-                          <button
-                            onClick={() => handleUpgrade(key)}
+                      {keys.map((key) => {
+                        const currentLevel =
+                          selectedGame === 'racer'
+                            ? upgrades[`${key}_level`] || 1
+                            : upgrades[key] || 1
+                        const upgradeCost = currentLevel * 100
+
+                        return (
+                          <li
+                            key={key}
                             style={{
-                              backgroundColor: '#6200ea',
-                              color: 'white',
-                              border: 'none',
-                              padding: '6px 12px',
-                              borderRadius: '4px',
-                              cursor: 'pointer',
-                              transition: 'background-color 0.2s',
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              marginBottom: '10px',
+                              padding: '8px 0',
+                              borderBottom: '1px dotted #dfe6e9',
                             }}
                           >
-                            Upgrade
-                          </button>
-                        </li>
-                      ))}
+                            <div>
+                              <div
+                                style={{ fontWeight: '500', color: '#2c3e50' }}
+                              >
+                                {formatKey(key)}
+                              </div>
+                              <div
+                                style={{ fontSize: '0.9em', color: '#7f8c8d' }}
+                              >
+                                Level: {currentLevel}
+                              </div>
+                            </div>
+
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                              }}
+                            >
+                              <div
+                                style={{
+                                  backgroundColor:
+                                    coins >= upgradeCost
+                                      ? '#e8f5e9'
+                                      : '#ffebee',
+                                  color:
+                                    coins >= upgradeCost
+                                      ? '#2e7d32'
+                                      : '#c62828',
+                                  padding: '4px 8px',
+                                  borderRadius: '4px',
+                                  fontSize: '0.85em',
+                                  fontWeight: 'bold',
+                                }}
+                              >
+                                {upgradeCost} coins
+                              </div>
+
+                              <button
+                                onClick={() => handleUpgrade(key)}
+                                disabled={coins < upgradeCost}
+                                style={{
+                                  backgroundColor:
+                                    coins >= upgradeCost
+                                      ? '#6200ea'
+                                      : '#b39ddb',
+                                  color: 'white',
+                                  border: 'none',
+                                  padding: '6px 12px',
+                                  borderRadius: '4px',
+                                  cursor:
+                                    coins >= upgradeCost
+                                      ? 'pointer'
+                                      : 'not-allowed',
+                                  transition: 'background-color 0.2s',
+                                  opacity: coins >= upgradeCost ? 1 : 0.7,
+                                  minWidth: '80px',
+                                }}
+                              >
+                                Upgrade
+                              </button>
+                            </div>
+                          </li>
+                        )
+                      })}
                     </ul>
                   </div>
                 ))}
@@ -304,8 +393,8 @@ const Marketplace = () => {
         </>
       ) : (
         <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-          <h1 style={{ color: '#6200ea', marginBottom: '15px' }}>
-            Marketplace
+          <h1 className='text-4xl md:text-5xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-[#6200ea]'>
+            Welcome to the Marketplace
           </h1>
           <p style={{ fontSize: '1.3em' }}>
             Discover and shop for unique items in our marketplace.

@@ -8,19 +8,19 @@ const Games = () => {
       title: 'Sokoban',
       thumbnail:
         'https://play-lh.googleusercontent.com/IVTpt37tHBQ5u7SOzD4y7OCipsq2xRkDv1h-qYKO_Mab_MLFsPFOXpuVJpjfATyMDRQ=w526-h296-rw',
-      url: 'http://localhost:5059/sokoban',
+      url: `${process.env.REACT_APP_API}/sokoban`,
     },
     {
       id: 'racer',
       title: 'Top Racer',
       thumbnail: 'https://img.youtube.com/vi/Y92aG3YagXU/hqdefault.jpg',
-      url: 'http://localhost:5059/racer/v4.final.html',
+      url: `${process.env.REACT_APP_API}/racer/v4.final.html`,
     },
     {
       id: 'onslaught',
       title: 'Onslaught Arena',
       thumbnail: 'https://www.typinggames.zone/web/game-thumbnails/arena2.png',
-      url: 'http://localhost:5059/onslaught-arena',
+      url: `${process.env.REACT_APP_API}/onslaught-arena`,
     },
   ]
 
@@ -65,7 +65,9 @@ const Games = () => {
         </>
       ) : (
         <>
-          <h1>Games</h1>
+          <h1 className='text-4xl md:text-5xl font-bold text-center mt-0 mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-[#6200ea]'>
+            Games
+          </h1>
           <p>
             Discover the amazing games we have to offer by logging in or signing
             up.

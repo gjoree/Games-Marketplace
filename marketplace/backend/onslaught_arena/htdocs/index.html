@@ -24,5 +24,24 @@
     <script src="js/spawn_point.js"></script>
     <script src="js/spawn_wave.js"></script>
     <script src="js/run_game.js"></script>
+    <script>
+      // Start session when page loads
+      fetch(`${process.env.REACT_APP_API}/api/sessions/start`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ game: 'arena' }),
+      })
+
+      // End session when the user leaves or reloads
+      window.addEventListener('beforeunload', function () {
+        navigator.sendBeacon(
+          `${process.env.REACT_APP_API}/api/sessions/end`,
+          new Blob([JSON.stringify({ game: 'arena' })], {
+            type: 'application/json',
+          }),
+        )
+      })
+    </script>
   </body>
 </html>
