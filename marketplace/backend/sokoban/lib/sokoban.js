@@ -112,6 +112,18 @@ document.addEventListener('DOMContentLoaded', () => {
           console.error('Failed to update user progress', err)
         })
 
+      fetch('/api/log/event', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          game: 'sokoban',
+          eventType: 'level_complete',
+          eventDetail: `Level ${nextLevel}`,
+          coinsEarned: 100,
+        }),
+      })
+
       if (sokoban.level === 49) {
         // Call API to reset the user's progress
         fetch('/api/sokoban/reset', {

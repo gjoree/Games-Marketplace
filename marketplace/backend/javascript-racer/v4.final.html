@@ -301,7 +301,18 @@
             }
             updateHud('last_lap_time', formatTime(lastLapTime))
             Dom.show('last_lap_time')
-            fetch('http://localhost:5059/api/racer/award-coins', {
+            fetch('/api/log/event', {
+              method: 'POST',
+              credentials: 'include',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                game: 'racer',
+                eventType: 'lap_complete',
+                eventDetail: `Lap time: ${formatTime(lastLapTime)}`,
+                coinsEarned: coinsEarned,
+              }),
+            })
+            fetch(`${process.env.REACT_APP_API}/api/racer/award-coins`, {
               method: 'POST',
               credentials: 'include',
               headers: { 'Content-Type': 'application/json' },
@@ -1093,7 +1104,7 @@
     </script>
     <script>
       // Start session when page loads
-      fetch('http://localhost:5059/api/sessions/start', {
+      fetch(`${process.env.REACT_APP_API}/api/sessions/start`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -1103,7 +1114,7 @@
       // End session when the user leaves or reloads
       window.addEventListener('beforeunload', function () {
         navigator.sendBeacon(
-          'http://localhost:5059/api/sessions/end',
+          `${process.env.REACT_APP_API}/api/sessions/end`,
           new Blob([JSON.stringify({ game: 'racer' })], {
             type: 'application/json',
           }),

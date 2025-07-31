@@ -1313,6 +1313,17 @@
           body: JSON.stringify({ coins: this.currentWaveId * 100 }),
         })
         console.log('Rewarded coins for wave', this.currentWaveId * 100)
+        fetch('/api/log/event', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            game: 'arena',
+            eventType: 'wave_complete',
+            eventDetail: `Wave ${this.currentWaveId}`,
+            coinsEarned: this.currentWaveId * 100,
+          }),
+        })
       }
       if (this.waves[this.currentWaveId].bossWave) {
         waveTextString =

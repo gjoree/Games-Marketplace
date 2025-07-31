@@ -121,13 +121,17 @@ router.post('/upgrade', async (req, res) => {
       return res.status(400).json({ error: 'Stat is already maxed out' })
     }
 
-    if (user.coins < config.costPerLevel) {
-      return res.status(400).json({ error: 'Not enough coins' })
+    const dynamicCost = currentLevel * 100
+
+    if (user.coins < dynamicCost) {
+      return res
+        .status(400)
+        .json({ error: `Not enough coins. You need ${dynamicCost}` })
     }
 
     // Deduct coins
     await db.query(`UPDATE Users SET coins = coins - ? WHERE user_id = ?`, [
-      config.costPerLevel,
+      dynamicCost,
       userId,
     ])
 
@@ -142,14 +146,7 @@ router.post('/upgrade', async (req, res) => {
       `INSERT INTO UpgradeTransactions (
          user_id, game, upgrade_type, previous_level, new_level, cost
        ) VALUES (?, ?, ?, ?, ?, ?)`,
-      [
-        userId,
-        'racer',
-        statKey,
-        currentLevel,
-        currentLevel + 1,
-        config.costPerLevel,
-      ],
+      [userId, 'racer', statKey, currentLevel, currentLevel + 1, dynamicCost],
     )
 
     // Return updated values
