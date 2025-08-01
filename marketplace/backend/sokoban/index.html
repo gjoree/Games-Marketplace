@@ -55,7 +55,7 @@
     <script src="./dist/bundle.js"></script>
     <script>
       // Start session when page loads
-      fetch(`${process.env.REACT_APP_API}/api/sessions/start`, {
+      fetch('http://88.200.63.148:5059/api/sessions/start', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -65,7 +65,7 @@
       // End session when the user leaves or reloads
       window.addEventListener('beforeunload', function () {
         navigator.sendBeacon(
-          `${process.env.REACT_APP_API}/api/sessions/end`,
+          'http://88.200.63.148:5059/api/sessions/end',
           new Blob([JSON.stringify({ game: 'sokoban' })], {
             type: 'application/json',
           }),
