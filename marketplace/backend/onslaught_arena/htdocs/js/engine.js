@@ -1301,12 +1301,6 @@
         this.waveHack = false
       } else {
         this.spawnWaveExtras(actualWave)
-      }
-      var waveTextString = 'Wave ' + actualWave
-      var waveMusic = 'normal_battle_music'
-      if (actualWave > 1) {
-        this.putData('checkpoint_wave', this.currentWaveId)
-        this.putData('checkpoint_hero', JSON.stringify(this.getPlayerObject()))
         fetch('/api/onslaught/reward-coins', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1324,6 +1318,12 @@
             coinsEarned: this.currentWaveId * 100,
           }),
         })
+      }
+      var waveTextString = 'Wave ' + actualWave
+      var waveMusic = 'normal_battle_music'
+      if (actualWave > 1) {
+        this.putData('checkpoint_wave', this.currentWaveId)
+        this.putData('checkpoint_hero', JSON.stringify(this.getPlayerObject()))
       }
       if (this.waves[this.currentWaveId].bossWave) {
         waveTextString =
