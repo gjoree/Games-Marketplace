@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import Home from './components/Home'
-import Marketplace from './components/Marketplace'
+// import Marketplace from './components/Marketplace'
 import Games from './components/Games'
 import Leaderboard from './components/Leaderboard'
 import { FaHome, FaCoins, FaSignInAlt } from 'react-icons/fa'
@@ -94,11 +94,11 @@ const App = () => {
                   <FaHome /> Home
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to='/marketplace' className='navbar-link'>
                   <FaCoins /> Marketplace
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link to='/games' className='navbar-link'>
                   <GiAk47U /> Games
@@ -173,7 +173,7 @@ const App = () => {
 
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/marketplace' element={<Marketplace />} />
+          {/* <Route path='/marketplace' element={<Marketplace />} /> */}
           <Route path='/games' element={<Games />} />
           <Route path='/leaderboard' element={<Leaderboard />} />
         </Routes>

@@ -312,7 +312,7 @@
                 coinsEarned: coinsEarned,
               }),
             })
-            fetch(`${process.env.REACT_APP_API}/api/racer/award-coins`, {
+            fetch('http://88.200.63.148:5059/api/racer/award-coins', {
               method: 'POST',
               credentials: 'include',
               headers: { 'Content-Type': 'application/json' },
