@@ -1324,6 +1324,19 @@
       if (actualWave > 1) {
         this.putData('checkpoint_wave', this.currentWaveId)
         this.putData('checkpoint_hero', JSON.stringify(this.getPlayerObject()))
+        this.highScoreSaved = true
+
+        var highScore = Number(this.getData(HIGH_SCORE_KEY))
+        var totalScore = this.getTotalScore()
+
+        // Clay.io: Post score to clay.io
+        var _this = this
+
+        if (totalScore > highScore) {
+          this.putData(HIGH_SCORE_KEY, totalScore)
+          horde.sound.play('victory')
+          this.gotNewHighScore = true
+        }
       }
       if (this.waves[this.currentWaveId].bossWave) {
         waveTextString =
