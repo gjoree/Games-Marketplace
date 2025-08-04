@@ -41,14 +41,6 @@ const Home = () => {
             be displayed on your profile! Good luck and have fun! May the best
             gamer win!
           </p>
-          <p className='text-md text-gray-700 text-center mb-4'>
-            {' '}
-            Recommendation: Play the sokoban game first to generate an economy,
-            so you can buy upgrades in the marketplace! Also, when you play
-            onslaught arena, start a new game, since the progress is saved
-            locally, so you will be rewarded with coins based on the wave you
-            reach, so try to get as far as possible!
-          </p>
         </>
       ) : (
         <>
