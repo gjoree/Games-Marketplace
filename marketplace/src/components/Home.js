@@ -14,9 +14,40 @@ const Home = () => {
             upgrades of stats!
           </p>
           <p className='text-md text-gray-700 text-center mb-4'>
-            For this demo and trial version, please dedicate some time,
-            approximately an hour to each game, to experience the games and
-            provide feedback if possible.
+            Welcome back!{' '}
+          </p>
+          <p className='text-md text-gray-700 text-center mb-4'>
+            {' '}
+            In the latest update, we added new features to enhance your gaming
+            experience. We added coins rewards for completing levels in games
+            like Sokoban and Racer, and improved the Marketplace with new items
+            and upgrades.{' '}
+          </p>
+          <p className='text-md text-gray-700 text-center mb-4'>
+            Check out the latest upgrades available for purchase! Already
+            existing players progress was reset and were awarded with 1000 coins
+            to get you started!{' '}
+          </p>
+          <p className='text-md text-gray-700 text-center mb-4'>
+            The goal of this new release is to see who is going to be the first
+            to reach the 50th wave of Onslaught Arena! and become the ultimate
+            champion of Gamer's Legion! Get rewarded with coins for your
+            achievements in all the games and use them to upgrade your stats in
+            the Marketplace.{' '}
+          </p>
+          <p className='text-md text-gray-700 text-center mb-4'>
+            {' '}
+            For the winner, we have a special prize: a unique trophy that will
+            be displayed on your profile! Good luck and have fun! May the best
+            gamer win!
+          </p>
+          <p className='text-md text-gray-700 text-center mb-4'>
+            {' '}
+            Recommendation: Play the sokoban game first to generate an economy,
+            so you can buy upgrades in the marketplace! Also, when you play
+            onslaught arena, start a new game, since the progress is saved
+            locally, so you will be rewarded with coins based on the wave you
+            reach, so try to get as far as possible!
           </p>
         </>
       ) : (

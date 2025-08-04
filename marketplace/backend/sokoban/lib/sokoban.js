@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
           game: 'sokoban',
           eventType: 'level_complete',
           eventDetail: `Level ${nextLevel}`,
-          coinsEarned: 100,
+          coinsEarned: 60,
         }),
       })
 

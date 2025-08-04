@@ -1304,9 +1304,9 @@
         fetch('/api/onslaught/reward-coins', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ coins: this.currentWaveId * 100 }),
+          body: JSON.stringify({ coins: this.currentWaveId * 30 }),
         })
-        console.log('Rewarded coins for wave', this.currentWaveId * 100)
+        console.log('Rewarded coins for wave', this.currentWaveId * 30)
         fetch('/api/log/event', {
           method: 'POST',
           credentials: 'include',
@@ -1315,7 +1315,7 @@
             game: 'arena',
             eventType: 'wave_complete',
             eventDetail: `Wave ${this.currentWaveId}`,
-            coinsEarned: this.currentWaveId * 100,
+            coinsEarned: this.currentWaveId * 30,
           }),
         })
       }

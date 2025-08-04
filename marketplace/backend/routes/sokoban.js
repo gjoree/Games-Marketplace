@@ -49,8 +49,8 @@ router.post('/complete-level', async (req, res) => {
     }
 
     const { maxLevel_Sokoban, Coins } = rows[0]
-    const newCoins = Coins + 10
-    const earnedCoins = 10 // Fixed reward for completing a level
+    const newCoins = Coins + 60 // Fixed reward for completing a level
+    const earnedCoins = 60 // Fixed reward for completing a level
 
     // Only update if it's a new level
     if (level > maxLevel_Sokoban) {
