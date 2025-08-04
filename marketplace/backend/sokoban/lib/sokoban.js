@@ -28,7 +28,7 @@ function createNewGame(level) {
 }
 
 function startFromSavedLevel() {
-  fetch('/api/sokoban/progress', {
+  fetch(`${process.env.REACT_APP_API}/api/sokoban/progress`, {
     method: 'GET',
     credentials: 'include',
   })
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (sokoban.board.gameOver()) {
       const nextLevel = sokoban.level + 1
 
-      fetch('/api/sokoban/complete-level', {
+      fetch(`${process.env.REACT_APP_API}/api/sokoban/complete-level`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
           console.error('Failed to update user progress', err)
         })
 
-      fetch('/api/log/event', {
+      fetch(`${process.env.REACT_APP_API}/api/log/event`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (sokoban.level === 49) {
         // Call API to reset the user's progress
-        fetch('/api/sokoban/reset', {
+        fetch(`${process.env.REACT_APP_API}/api/sokoban/reset`, {
           method: 'POST',
           credentials: 'include',
         })

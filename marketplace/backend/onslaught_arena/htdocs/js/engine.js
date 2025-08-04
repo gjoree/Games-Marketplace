@@ -167,7 +167,9 @@
 
   proto.run = function horde_Engine_proto_run() {
     // Fetch upgrades before starting the game
-    fetch('/api/onslaught/upgrades', { credentials: 'include' })
+    fetch(`${process.env.REACT_APP_API}/api/onslaught/upgrades`, {
+      credentials: 'include',
+    })
       .then((res) => res.json())
       .then((upgradeData) => {
         horde.upgrades = upgradeData
@@ -1301,13 +1303,13 @@
         this.waveHack = false
       } else {
         this.spawnWaveExtras(actualWave)
-        fetch('/api/onslaught/reward-coins', {
+        fetch(`${process.env.REACT_APP_API}/api/onslaught/reward-coins`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ coins: this.currentWaveId * 30 }),
         })
         console.log('Rewarded coins for wave', this.currentWaveId * 30)
-        fetch('/api/log/event', {
+        fetch(`${process.env.REACT_APP_API}/api/log/event`, {
           method: 'POST',
           credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
@@ -4610,7 +4612,7 @@
         // 🔁 Send the latest data to your backend after 3s of no updates
         const body = { [key]: value }
 
-        fetch('/api/onslaught/save-progress', {
+        fetch(`${process.env.REACT_APP_API}/api/onslaught/save-progress`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
@@ -4652,7 +4654,7 @@
     }
 
     // 🔁 Clear on the backend
-    fetch(`/api/onslaught/clear-progress`, {
+    fetch(`${process.env.REACT_APP_API}/api/onslaught/clear-progress`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',

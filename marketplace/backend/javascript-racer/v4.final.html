@@ -280,7 +280,7 @@
               coinsEarned = 50
 
               // Send to DB only when it's a new best lap
-              fetch('/api/racer/updateBestLap', {
+              fetch(`${process.env.REACT_APP_API}/api/racer/updateBestLap`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -301,7 +301,7 @@
             }
             updateHud('last_lap_time', formatTime(lastLapTime))
             Dom.show('last_lap_time')
-            fetch('/api/log/event', {
+            fetch(`${process.env.REACT_APP_API}/api/log/event`, {
               method: 'POST',
               credentials: 'include',
               headers: { 'Content-Type': 'application/json' },
@@ -312,7 +312,7 @@
                 coinsEarned: coinsEarned,
               }),
             })
-            fetch('/api/racer/award-coins', {
+            fetch(`${process.env.REACT_APP_API}/api/racer/award-coins`, {
               method: 'POST',
               credentials: 'include',
               headers: { 'Content-Type': 'application/json' },
