@@ -277,7 +277,7 @@
               updateHud('fast_lap_time', formatTime(lastLapTime))
               Dom.addClassName('fast_lap_time', 'fastest')
               Dom.addClassName('last_lap_time', 'fastest')
-              coinsEarned = 10
+              coinsEarned = 50
 
               // Send to DB only when it's a new best lap
               fetch('/api/racer/updateBestLap', {
@@ -295,7 +295,7 @@
                   console.error('Error updating best lap time:', err)
                 })
             } else {
-              coinsEarned = 5 // Base reward per lap
+              coinsEarned = 30 // Base reward per lap
               Dom.removeClassName('fast_lap_time', 'fastest')
               Dom.removeClassName('last_lap_time', 'fastest')
             }
@@ -312,7 +312,7 @@
                 coinsEarned: coinsEarned,
               }),
             })
-            fetch('http://88.200.63.148:5059/api/racer/award-coins', {
+            fetch('/api/racer/award-coins', {
               method: 'POST',
               credentials: 'include',
               headers: { 'Content-Type': 'application/json' },
